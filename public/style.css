@@ -1,0 +1,52 @@
+/* Custom CSS for Institutional Look */
+body { 
+    background-color: #f4f7f6; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+.sidebar { 
+    background: #002147; /* Oxford Blue - very formal */
+    color: white; 
+    min-height: 100vh; 
+    padding: 30px 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #ffab00; /* Gold accent */
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+.sidebar a { 
+    color: #bdc3c7; 
+    text-decoration: none; 
+    display: block; 
+    padding: 12px 15px; 
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover { 
+    background: rgba(255,255,255,0.1);
+    color: white; 
+}
+
+.doc-card { 
+    border: none;
+    border-radius: 10px;
+    background: white; 
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 6px solid #002147; 
+    transition: all 0.3s ease;
+}
+
+.doc-card:hover { 
+    transform: scale(1.01);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
