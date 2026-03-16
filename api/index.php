@@ -17,6 +17,7 @@ $filter = $_GET['cat'] ?? 'All';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Institutional Digital Archive | USI Style</title>
+    <link rel="stylesheet" href="/public/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #f8f9fa; font-family: 'Georgia', serif; }
