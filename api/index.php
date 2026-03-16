@@ -1,10 +1,10 @@
 <?php
-// Mock Database: In a real app, this would come from MySQL
+// Mock Database: mimicking the USI Publication architecture
 $publications = [
-    ["id" => 1, "title" => "Strategic Review: Maritime Security", "cat" => "Journal", "date" => "Oct 2025", "author" => "Adm. R. Kumar"],
-    ["id" => 2, "title" => "Indo-Pacific Geopolitics 2026", "cat" => "Year Book", "date" => "Jan 2026", "author" => "Gen. S. Singh"],
-    ["id" => 3, "title" => "Cyber Warfare Tactics", "cat" => "Monograph", "date" => "Dec 2025", "author" => "Dr. A. Sharma"],
-    ["id" => 4, "title" => "Border Management Policy", "cat" => "Journal", "date" => "Feb 2026", "author" => "Col. V. Tyagi"],
+    ["id" => 1, "title" => "Journal of United Service Institution of India", "cat" => "Journal", "date" => "Jan-Mar 2026", "author" => "USI Editorial Board", "img" => "https://via.placeholder.com/50x70?text=J"],
+    ["id" => 2, "title" => "Strategic Year Book 2025: National Security", "cat" => "Year Book", "date" => "Jan 2026", "author" => "Maj Gen B.K. Sharma", "img" => "https://via.placeholder.com/50x70?text=YB"],
+    ["id" => 3, "title" => "The Art of Hybrid Warfare in 2026", "cat" => "Monograph", "date" => "Dec 2025", "author" => "Lt Gen (Retd) P. Singh", "img" => "https://via.placeholder.com/50x70?text=M"],
+    ["id" => 4, "title" => "Cyber Security Challenges in South Asia", "cat" => "Journal", "date" => "Oct-Dec 2025", "author" => "Dr. S. Kalyanaraman", "img" => "https://via.placeholder.com/50x70?text=J"],
 ];
 
 $search = $_GET['q'] ?? '';
@@ -16,68 +16,116 @@ $filter = $_GET['cat'] ?? 'All';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institutional Digital Archive | USI Style</title>
-    <link rel="stylesheet" href="/public/style.css">
+    <title>Institutional Digital Archive | Akash Kumar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; font-family: 'Georgia', serif; }
-        .sidebar { background: #1a237e; color: white; min-height: 100vh; padding: 20px; }
-        .sidebar a { color: #cfd8dc; text-decoration: none; display: block; padding: 10px 0; border-bottom: 1px solid #303f9f; }
-        .sidebar a:hover { color: white; }
-        .main-content { padding: 40px; }
-        .doc-card { background: white; border-left: 5px solid #1a237e; transition: 0.3s; margin-bottom: 15px; }
-        .doc-card:hover { transform: translateY(-3px); shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .badge-journal { background: #e8eaf6; color: #1a237e; }
+        /* Institutional Styling */
+        :root {
+            --usi-blue: #002147;
+            --usi-gold: #ffab00;
+            --light-bg: #f4f7f6;
+        }
+
+        body { background-color: var(--light-bg); font-family: 'Georgia', serif; color: #333; }
+        
+        /* Sidebar */
+        .sidebar { background: var(--usi-blue); color: white; min-height: 100vh; padding: 30px 20px; position: sticky; top: 0; }
+        .sidebar h4 { font-size: 1.1rem; border-bottom: 2px solid var(--usi-gold); padding-bottom: 10px; margin-bottom: 25px; text-transform: uppercase; }
+        .sidebar a { color: #bdc3c7; text-decoration: none; display: block; padding: 12px; border-radius: 5px; transition: 0.3s; margin-bottom: 5px; }
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.1); color: white; }
+
+        /* News Ticker (Very common on Institutional sites) */
+        .ticker-wrap { background: #fff; border-bottom: 1px solid #ddd; padding: 10px; overflow: hidden; white-space: nowrap; }
+        .ticker { display: inline-block; animation: marquee 20s linear infinite; color: #d32f2f; font-weight: bold; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* Document Cards */
+        .main-content { padding: 30px; }
+        .doc-card { 
+            background: white; border: none; border-left: 5px solid var(--usi-blue); 
+            border-radius: 8px; margin-bottom: 20px; transition: 0.3s; 
+        }
+        .doc-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .btn-view { background: var(--usi-blue); color: white; border-radius: 20px; padding: 5px 20px; }
+        .btn-view:hover { background: #003366; color: white; }
+
+        .search-bar { border-radius: 25px; padding-left: 20px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
-<div class="container-fluid">
-    <div class="row">
-        <nav class="col-md-3 col-lg-2 sidebar d-none d-md-block">
-            <h4 class="mb-4">USI Archive</h4>
-            <a href="?cat=All">All Publications</a>
-            <a href="?cat=Journal">Quarterly Journals</a>
-            <a href="?cat=Year Book">Strategic Year Books</a>
-            <a href="?cat=Monograph">Monographs</a>
+<div class="container-fluid p-0">
+    <div class="row g-0">
+        <nav class="col-md-3 col-lg-2 sidebar">
+            <h4>Archive Portal</h4>
+            <a href="?cat=All" class="<?= $filter == 'All' ? 'active' : '' ?>">📂 All Publications</a>
+            <a href="?cat=Journal" class="<?= $filter == 'Journal' ? 'active' : '' ?>">📖 Quarterly Journals</a>
+            <a href="?cat=Year Book" class="<?= $filter == 'Year Book' ? 'active' : '' ?>">📚 Strategic Year Books</a>
+            <a href="?cat=Monograph" class="<?= $filter == 'Monograph' ? 'active' : '' ?>">📄 Monographs</a>
             <hr>
-            <small class="text-muted">Digital Library v2.1</small>
+            <div class="mt-4">
+                <button class="btn btn-outline-warning w-100 btn-sm">Member Login</button>
+            </div>
         </nav>
 
-        <main class="col-md-9 col-lg-10 main-content">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Digital Library & Archives</h2>
-                <form class="d-flex" method="GET">
-                    <input class="form-control me-2" type="search" name="q" placeholder="Search titles..." value="<?= htmlspecialchars($search) ?>">
-                    <button class="btn btn-outline-primary" type="submit">Search</button>
-                </form>
+        <div class="col-md-9 col-lg-10">
+            <div class="ticker-wrap">
+                <div class="ticker">
+                    LATEST NEWS: Call for Papers for July-Sept 2026 Journal is now open! | USI National Security Seminar begins next week.
+                </div>
             </div>
 
-            <div class="row">
-                <?php 
-                foreach ($publications as $pub): 
-                    // Search Logic
-                    $matchSearch = ($search == '' || stripos($pub['title'], $search) !== false);
-                    $matchFilter = ($filter == 'All' || $pub['cat'] == $filter);
+            <main class="main-content">
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <div>
+                        <h2 class="fw-bold">Digital Library & Archives</h2>
+                        <p class="text-muted">Filtering: <strong><?= $filter ?></strong></p>
+                    </div>
+                    <form class="d-flex" method="GET">
+                        <input type="hidden" name="cat" value="<?= $filter ?>">
+                        <input class="form-control search-bar me-2" type="search" name="q" placeholder="Search by title or author..." value="<?= htmlspecialchars($search) ?>">
+                        <button class="btn btn-dark rounded-pill px-4" type="submit">Search</button>
+                    </form>
+                </div>
 
-                    if ($matchSearch && $matchFilter): ?>
-                    <div class="col-12">
-                        <div class="card doc-card shadow-sm p-3">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <span class="badge badge-journal mb-2"><?= $pub['cat'] ?></span>
-                                    h5 class="card-title"><?= $pub['title'] ?></h5>
-                                    <p class="text-muted mb-0">By <?= $pub['author'] ?> | Published: <?= $pub['date'] ?></p>
-                                </div>
-                                <div class="align-self-center">
-                                    <a href="#" class="btn btn-sm btn-dark">View PDF</a>
+                <div class="row">
+                    <?php 
+                    $found = false;
+                    foreach ($publications as $pub): 
+                        $matchSearch = ($search == '' || stripos($pub['title'], $search) !== false || stripos($pub['author'], $search) !== false);
+                        $matchFilter = ($filter == 'All' || $pub['cat'] == $filter);
+
+                        if ($matchSearch && $matchFilter): 
+                            $found = true; ?>
+                            <div class="col-12">
+                                <div class="card doc-card p-3 shadow-sm">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <img src="<?= $pub['img'] ?>" alt="Cover" class="rounded border">
+                                        </div>
+                                        <div class="col">
+                                            <span class="badge bg-light text-dark border mb-1"><?= $pub['cat'] ?></span>
+                                            <h5 class="card-title fw-bold mb-1"><?= $pub['title'] ?></h5>
+                                            <p class="text-muted small mb-0">Author: <?= $pub['author'] ?> | Issued: <?= $pub['date'] ?></p>
+                                        </div>
+                                        <div class="col-auto text-end">
+                                            <a href="#" class="btn btn-view">Download PDF</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        <?php endif; 
+                    endforeach; 
+
+                    if (!$found): ?>
+                        <div class="col-12 text-center py-5">
+                            <h4 class="text-muted">No documents found matching your criteria.</h4>
+                            <a href="?cat=All" class="btn btn-link">Clear all filters</a>
                         </div>
-                    </div>
-                <?php endif; endforeach; ?>
-            </div>
-        </main>
+                    <?php endif; ?>
+                </div>
+            </main>
+        </div>
     </div>
 </div>
 
